@@ -95,11 +95,13 @@ export default class Grass
 
             }
 
-            this.geometry = new THREE.BufferGeometry()
-            this.geometry.setAttribute('center', new THREE.Float32BufferAttribute(centers, 2))
-            this.geometry.setAttribute('position', new THREE.Float32BufferAttribute(positions, 3))
         }
-
+        
+        this.geometry = new THREE.BufferGeometry()
+        this.geometry.setAttribute('center', new THREE.Float32BufferAttribute(centers, 2))
+        this.geometry.setAttribute('position', new THREE.Float32BufferAttribute(positions, 3))
+        // console.log(this.geometry)
+        
     }
 
     setMaterial()

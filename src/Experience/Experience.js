@@ -9,6 +9,8 @@ import Renderer from './Renderer.js'
 import World from './World/World.js'
 import Resources from './Utils/Resources.js'
 import sources from './sources.js'
+import State from './Utils/State.js'
+import Controls from './Utils/Controls.js'
 
 
 
@@ -35,11 +37,13 @@ export default class Experience
         this.debug = new Debug()
         this.sizes = new Sizes()
         this.time = new Time()
-        this.state = new StatsJS()
+        this.stats = new StatsJS()
         this.scene = new THREE.Scene()
         this.resources = new Resources(sources)
         this.camera = new Camera()
         this.renderer = new Renderer()
+        this.state = new State()
+        this.controls = new Controls()
         this.world = new World()
 
         // Resize event
@@ -63,11 +67,11 @@ export default class Experience
 
     update()
     {
-        this.state.begin()
+        this.stats.begin()
         this.camera.update()
         this.world.update()
         this.renderer.update()
-        this.state.end()
+        this.stats.end()
     }
 
     destroy()

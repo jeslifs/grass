@@ -1,8 +1,6 @@
 import Experience from '../Experience.js'
 import Default from './Default.js'
 import Environment from './Environment.js'
-import Floor from './Floor.js'
-import Fox from './Fox.js'
 import Grass from './Grass.js'
 
 export default class World
@@ -27,7 +25,7 @@ export default class World
 
     update()
     {
-        if(this.fox)
-            this.fox.update()
+        if(this.default)
+            this.default.update()
     }
 }
