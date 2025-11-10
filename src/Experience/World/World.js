@@ -27,5 +27,8 @@ export default class World
     {
         if(this.default)
             this.default.update()
+
+        if(this.grass)
+            this.grass.update()
     }
 }

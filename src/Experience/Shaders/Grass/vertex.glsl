@@ -1,3 +1,7 @@
+uniform vec3 uPlayerPosition;
+uniform float uGrassSize;
+
+
 attribute vec2 center;
 
 #include ../includes/getRotatePivot2d.glsl
@@ -10,9 +14,12 @@ void main()
     // center
     vec2 newCenter = center;
 
+    // move the grass with the player position
+    newCenter += uPlayerPosition.xz;
+
     vec4 modelCenter = modelMatrix * vec4(newCenter.x, 0.0, newCenter.y, 1.0);
 
-    
+
 
 
 

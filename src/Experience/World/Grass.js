@@ -13,6 +13,7 @@ export default class Grass
         this.resources = this.experience.resources
         this.time = this.experience.time
         this.debug = this.experience.debug
+        this.state = this.experience.state.character
 
         // setup
         this.size = 64
@@ -112,6 +113,12 @@ export default class Grass
             // side: THREE.DoubleSide,
             vertexShader: Vertex,
             fragmentShader: Fragment,
+            uniforms:
+            {
+                uPlayerPosition: new THREE.Uniform(new THREE.Vector3()),
+                uGrassSize: new THREE.Uniform(this.size),
+                
+            }
         })
     }
 
@@ -122,5 +129,10 @@ export default class Grass
 
         // this.grass.rotation.x = - Math.PI * 0.5
         this.scene.add(this.grass)
+    }
+
+    update()
+    {
+        this.material.uniforms.uPlayerPosition.value.copy(this.state.position)
     }
 }
