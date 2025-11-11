@@ -115,9 +115,9 @@ export default class Grass
             fragmentShader: Fragment,
             uniforms:
             {
-                uPlayerPosition: new THREE.Uniform(new THREE.Vector3()),
+                uPlayerPosition: new THREE.Uniform(this.state.position),
                 uGrassSize: new THREE.Uniform(this.size),
-                
+
             }
         })
     }
@@ -133,6 +133,9 @@ export default class Grass
 
     update()
     {
+
+        // set mesh position
+        this.grass.position.set(this.state.position.x, 0, this.state.position.z)
         this.material.uniforms.uPlayerPosition.value.copy(this.state.position)
     }
 }

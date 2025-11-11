@@ -14,11 +14,16 @@ void main()
     // center
     vec2 newCenter = center;
 
-    // move the grass with the player position
-    newCenter += uPlayerPosition.xz;
+    // move the grass oppersite to the player position
+    newCenter -= uPlayerPosition.xz;
+
+    // infinite grass
+    float halfSize = uGrassSize * 0.5;
+    newCenter.x = mod(newCenter.x + halfSize, uGrassSize) - halfSize;
+    newCenter.y = mod(newCenter.y + halfSize, uGrassSize) - halfSize;
 
     vec4 modelCenter = modelMatrix * vec4(newCenter.x, 0.0, newCenter.y, 1.0);
-
+    
 
 
 

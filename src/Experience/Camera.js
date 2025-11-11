@@ -10,10 +10,10 @@ export default class Camera
         this.sizes = this.experience.sizes
         this.scene = this.experience.scene
         this.canvas = this.experience.canvas
+        this.state = this.experience.state.character
 
         // setup
-        this.targetObject = null
-        this.offest = new THREE.Vector2(0, 8, 12)
+        this.offset = new THREE.Vector3(0, 8, 20)
         this.lerpFactor = 0.05
 
         this.setInstance()
@@ -23,7 +23,11 @@ export default class Camera
     setInstance()
     {
         this.instance = new THREE.PerspectiveCamera(45, this.sizes.width / this.sizes.height, 0.1, 1000)
-        this.instance.position.set(6, 4, 8)
+        this.instance.position.set(
+            this.state.position.x + this.offset.x,
+            this.state.position.y + this.offset.y,
+            this.state.position.z + this.offset.z
+        )
         this.scene.add(this.instance)
     }
 
@@ -31,6 +35,7 @@ export default class Camera
     {
         this.controls = new OrbitControls(this.instance, this.canvas)
         this.controls.enableDamping = true
+        this.controls.target.copy(this.state.position)
     }
 
     resize()
@@ -39,22 +44,19 @@ export default class Camera
         this.instance.updateProjectionMatrix()
     }
 
-    setTarget(object)
-    {
-        this.targetObject = object
-    }
-
     update()
     {
-        if(this.targetObject)
-        {
-            const idealPosition = new THREE.Vector3().copy(this.targetObject.position)
-            idealPosition.add(this.offest)
+        const targetPosition = this.state.position
 
-            this.instance.position.lerp(idealPosition, this.lerpFactor)
+        // 2. Calculate the ideal camera position (player pos + fixed offset)
+        const idealPosition = new THREE.Vector3().copy(targetPosition)
+        idealPosition.add(this.offset)
 
-            this.instance.lookAt(this.targetObject.position)
-        }
-        this.controls.update()
+        // 3. Smoothly move (lerp) the camera towards that ideal position
+        this.instance.position.lerp(idealPosition, this.lerpFactor)
+
+        // 4. Always make the camera look at the player
+        this.instance.lookAt(targetPosition)
+        // this.controls.update()
     }
 }

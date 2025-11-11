@@ -34,6 +34,8 @@ export default class Experience
         this.canvas = _canvas
 
         // Setup
+        this.state = new State()
+        this.controls = new Controls()
         this.debug = new Debug()
         this.sizes = new Sizes()
         this.time = new Time()
@@ -42,8 +44,6 @@ export default class Experience
         this.resources = new Resources(sources)
         this.camera = new Camera()
         this.renderer = new Renderer()
-        this.state = new State()
-        this.controls = new Controls()
         this.world = new World()
 
         // Resize event
