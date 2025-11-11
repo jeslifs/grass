@@ -4,59 +4,72 @@ import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
 
 export default class Camera
 {
-    constructor()
-    {
-        this.experience = new Experience()
-        this.sizes = this.experience.sizes
-        this.scene = this.experience.scene
-        this.canvas = this.experience.canvas
-        this.state = this.experience.state.character
+        constructor()
+        {
+                this.experience = new Experience()
+                this.sizes = this.experience.sizes
+                this.scene = this.experience.scene
+                this.canvas = this.experience.canvas
+                this.playerState = this.experience.state.character
+                this.keyControls = this.experience.controls
 
-        // setup
-        this.offset = new THREE.Vector3(0, 8, 20)
-        this.lerpFactor = 0.05
+                // camera setup
+                this.isFollowing = true
+                this.lerpFactor = 0.05
+                this.offset = new THREE.Vector3(0, 8, 12)
 
-        this.setInstance()
-        this.setControls()
-    }
+                this.setInstance()
+                this.setControls()
+                this.setEventHandlers()
+        }
 
-    setInstance()
-    {
-        this.instance = new THREE.PerspectiveCamera(45, this.sizes.width / this.sizes.height, 0.1, 1000)
-        this.instance.position.set(
-            this.state.position.x + this.offset.x,
-            this.state.position.y + this.offset.y,
-            this.state.position.z + this.offset.z
-        )
-        this.scene.add(this.instance)
-    }
+        setInstance()
+        {
+                this.instance = new THREE.PerspectiveCamera(45, this.sizes.width / this.sizes.height, 0.1, 1000)
+                this.instance.position.copy(this.playerState.position).add(this.offset)
+                this.scene.add(this.instance)
+        }
 
-    setControls()
-    {
-        this.controls = new OrbitControls(this.instance, this.canvas)
-        this.controls.enableDamping = true
-        this.controls.target.copy(this.state.position)
-    }
+        setControls()
+        {
+                this.controls = new OrbitControls(this.instance, this.canvas)
+                this.controls.enableDamping = true
+                this.controls.target.copy(this.playerState.position)
+        }
 
-    resize()
-    {
-        this.instance.aspect = this.sizes.width / this.sizes.height
-        this.instance.updateProjectionMatrix()
-    }
+        setEventHandlers()
+        {
+                this.controls.addEventListener('start', () => 
+                {
+                        this.isFollowing = false
+                })
 
-    update()
-    {
-        const targetPosition = this.state.position
+                this.keyControls.on('keyDown', (keyName) => 
+                {
+                        if(keyName === 'forward' || keyName === 'backward' || keyName === 'strafeLeft' || keyName === 'strafeRight')
+                        {
+                                this.isFollowing = true
+                        }
+                })
+        }
 
-        // 2. Calculate the ideal camera position (player pos + fixed offset)
-        const idealPosition = new THREE.Vector3().copy(targetPosition)
-        idealPosition.add(this.offset)
+        resize()
+        {
+                this.instance.aspect = this.sizes.width / this.sizes.height
+                this.instance.updateProjectionMatrix()
+        }
 
-        // 3. Smoothly move (lerp) the camera towards that ideal position
-        this.instance.position.lerp(idealPosition, this.lerpFactor)
+        update()
+        {
+                const targetPosition = this.playerState.position
 
-        // 4. Always make the camera look at the player
-        this.instance.lookAt(targetPosition)
-        // this.controls.update()
-    }
+                if(this.isFollowing)
+                {
+                        this.controls.target.lerp(targetPosition, this.lerpFactor)
+                        const idealPosition = new THREE.Vector3().copy(targetPosition)
+                        idealPosition.add(this.offset)
+                        this.instance.position.lerp(idealPosition, this.lerpFactor)
+                }
+                this.controls.update()
+        }
 }
