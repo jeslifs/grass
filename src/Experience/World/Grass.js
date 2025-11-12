@@ -9,14 +9,17 @@ export default class Grass
     constructor()
     {
         this.experience = new Experience()
+        this.state = this.experience.state.character
         this.scene = this.experience.scene
         this.resources = this.experience.resources
         this.time = this.experience.time
+        this.perlinTexture = this.resources.items.perlinTexture
+        this.perlinTexture.wrapS = THREE.RepeatWrapping
+        this.perlinTexture.wrapT = THREE.RepeatWrapping
         this.debug = this.experience.debug
-        this.state = this.experience.state.character
 
         // setup
-        this.size = 64
+        this.size = 24
         this.plane = 200
         this.count = this.plane * this.plane
         this.fragmentSize = this.size / this.plane
@@ -24,6 +27,13 @@ export default class Grass
         this.bladeHeightRatio = 4
         this.positionRandomness = 0.5
         this.bladeHeightRandomness = 0.5
+
+        // Debug
+        if(this.debug.active)
+        {
+            this.debugFolder = this.debug.ui.addFolder('Grass')
+            this.debugFolder.close()
+        }
 
         this.setGeometry()
         this.setMaterial()
@@ -117,7 +127,14 @@ export default class Grass
             {
                 uPlayerPosition: new THREE.Uniform(this.state.position),
                 uGrassSize: new THREE.Uniform(this.size),
-
+                uPerlinTexture: new THREE.Uniform(this.perlinTexture),
+                uTime: new THREE.Uniform(0),
+                uWindDirection: new THREE.Uniform(new THREE.Vector2(-1, 1)),
+                uWindSpeed1: new THREE.Uniform(0.1),
+                uWindSpeed2: new THREE.Uniform(0.03),
+                uWindNoiseScale1: new THREE.Uniform(0.06),
+                uWindNoiseScale2: new THREE.Uniform(0.043),
+                uWindStrength: new THREE.Uniform(1.25),
             }
         })
     }
@@ -129,6 +146,61 @@ export default class Grass
 
         // this.grass.rotation.x = - Math.PI * 0.5
         this.scene.add(this.grass)
+
+        if(this.debug.active)
+        {
+            
+            this.debugFolder
+            .add(this.material.uniforms.uWindDirection.value, 'x')
+            .min(-1)
+            .max(1)
+            .step(0.01)
+            .name('Wind Direction X')
+
+            this.debugFolder
+            .add(this.material.uniforms.uWindDirection.value, 'y')
+            .min(-1)
+            .max(1)
+            .step(0.01)
+            .name('Wind Direction Y')
+
+            this.debugFolder
+            .add(this.material.uniforms.uWindSpeed1, 'value')
+            .min(0)
+            .max(1)
+            .step(0.01)
+            .name('Wind Speed 1')
+
+            this.debugFolder
+            .add(this.material.uniforms.uWindSpeed2, 'value')
+            .min(0)
+            .max(1)
+            .step(0.01)
+            .name('Wind Speed 2')
+
+            this.debugFolder
+            .add(this.material.uniforms.uWindNoiseScale1, 'value')
+            .min(0)
+            .max(1)
+            .step(0.01)
+            .name('Wind Noise Scale 1')
+
+            this.debugFolder
+            .add(this.material.uniforms.uWindNoiseScale2, 'value')
+            .min(0)
+            .max(1)
+            .step(0.01)
+            .name('Wind Noise Scale 2')
+
+
+            this.debugFolder
+            .add(this.material.uniforms.uWindStrength, 'value')
+            .min(0)
+            .max(5)
+            .step(0.01)
+            .name('Wind Strength')
+
+        }
     }
 
     update()
@@ -136,6 +208,7 @@ export default class Grass
 
         // set mesh position
         this.grass.position.set(this.state.position.x, 0, this.state.position.z)
+        this.material.uniforms.uTime.value = this.time.elapsed
         this.material.uniforms.uPlayerPosition.value.copy(this.state.position)
     }
 }

@@ -9,7 +9,7 @@ export default class Default
         this.scene = this.experience.scene
         this.resources = this.experience.resources
         this.time = this.experience.time
-        this.debug = this.experience.debug
+        // this.debug = this.experience.debug
         this.controls = this.experience.controls
         this.playerState = this.experience.state.character
         
@@ -29,11 +29,11 @@ export default class Default
         this.moveDirection = new THREE.Vector3()
 
         // Debug
-        if(this.debug.active)
-        {
-            this.debugFolder = this.debug.ui.addFolder('Default Cube')
-            this.debugFolder.close()
-        }
+        // if(this.debug.active)
+        // {
+        //     this.debugFolder = this.debug.ui.addFolder('Default Cube')
+        //     this.debugFolder.close()
+        // }
 
 
         this.setGeometry()

@@ -8,16 +8,16 @@ export default class Environment
         this.experience = new Experience()
         this.scene = this.experience.scene
         this.resources = this.experience.resources
-        this.debug = this.experience.debug
+        // this.debug = this.experience.debug
         
         // Debug
-        if(this.debug.active)
-        {
-            this.debugFolder = this.debug.ui.addFolder('environment')
-        }
+        // if(this.debug.active)
+        // {
+        //     this.debugFolder = this.debug.ui.addFolder('environment')
+        // }
 
-        this.setSunLight()
-        this.setEnvironmentMap()
+        // this.setSunLight()
+        // this.setEnvironmentMap()
     }
 
     setSunLight()
