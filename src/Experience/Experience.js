@@ -11,6 +11,7 @@ import Resources from './Utils/Resources.js'
 import sources from './sources.js'
 import State from './Utils/State.js'
 import Controls from './Utils/Controls.js'
+import InteractivePlane from './World/Interactiveplane.js'
 
 
 
@@ -44,7 +45,8 @@ export default class Experience
         this.resources = new Resources(sources)
         this.camera = new Camera()
         this.renderer = new Renderer()
-        this.world = new World()
+        this.interactivePlane = new InteractivePlane()
+        this.world = new World(this.interactivePlane)
 
         // Resize event
         this.sizes.on('resize', () =>
@@ -70,6 +72,7 @@ export default class Experience
         this.stats.begin()
         this.camera.update()
         this.world.update()
+        this.interactivePlane.update()
         this.renderer.update()
         this.stats.end()
     }

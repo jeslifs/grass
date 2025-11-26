@@ -5,7 +5,7 @@ import Grass from './Grass.js'
 
 export default class World
 {
-    constructor()
+    constructor(interactivePlane)
     {
         this.experience = new Experience()
         this.scene = this.experience.scene
@@ -18,7 +18,7 @@ export default class World
             // this.floor = new Floor()
             // this.fox = new Fox()
             this.default = new Default()
-            this.grass = new Grass()
+            this.grass = new Grass(interactivePlane)
             this.environment = new Environment()
         })
     }

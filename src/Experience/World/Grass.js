@@ -6,7 +6,7 @@ import Fragment from '../Shaders/Grass/fragment.glsl'
 
 export default class Grass
 {
-    constructor()
+    constructor(interactivePlane)
     {
         this.experience = new Experience()
         this.state = this.experience.state.character
@@ -16,6 +16,9 @@ export default class Grass
         this.perlinTexture = this.resources.items.perlinTexture
         this.perlinTexture.wrapS = THREE.RepeatWrapping
         this.perlinTexture.wrapT = THREE.RepeatWrapping
+        this.interactivePlaneTexture = interactivePlane
+        console.log(this.interactivePlaneTexture.displacement.texture);
+        
         this.debug = this.experience.debug
 
         // setup
@@ -135,6 +138,7 @@ export default class Grass
                 uWindNoiseScale1: new THREE.Uniform(0.06),
                 uWindNoiseScale2: new THREE.Uniform(0.043),
                 uWindStrength: new THREE.Uniform(1.25),
+                uInteractivePlaneTexture: new THREE.Uniform(this.interactivePlaneTexture.displacement.texture),
             }
         })
     }

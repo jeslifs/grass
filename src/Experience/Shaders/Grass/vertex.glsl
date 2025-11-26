@@ -8,6 +8,7 @@ uniform float uWindSpeed2;
 uniform float uWindNoiseScale1;
 uniform float uWindNoiseScale2;
 uniform float uWindStrength;
+uniform sampler2D uInteractivePlaneTexture;
 
 attribute vec2 center;
 
@@ -23,6 +24,9 @@ void main()
 
     // move the grass oppersite to the player position
     newCenter -= uPlayerPosition.xz;
+
+    // lower the grass on z
+
 
     // infinite grass
     float halfSize = uGrassSize * 0.5;
@@ -54,6 +58,22 @@ void main()
     // Apply wind
     modelPosition.x += windForce.x * tip;
     modelPosition.z += windForce.y * tip;
+
+    // Lower grass
+    
+    // modelCenter (world pos) - uPlayerPosition (world pos)
+    vec2 interactionUv = (modelCenter.xz - uPlayerPosition.xz) / uGrassSize + 0.5;
+    
+    // Flip Y to match the canvas coordinates (Canvas 0,0 is usually top-left)
+    interactionUv.y = 1.0 - interactionUv.y;
+
+    // texture glow strength
+    float interactionStrength = texture(uInteractivePlaneTexture, interactionUv).r;
+    interactionStrength = smoothstep(0.2, 0.3, interactionStrength);
+
+    // Lower the grass based on interaction
+    // modelPosition.y *= (1.0 - interactionStrength * tip);
+    modelPosition.y *= 1.0 - interactionStrength;
 
     vec4 viewPosition = viewMatrix * modelPosition;
     vec4 projectionPositon = projectionMatrix * viewPosition;
